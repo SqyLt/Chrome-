@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>生成PNG图标</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .icons-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .icon-preview {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 8px;
+      text-align: center;
+      background-color: white;
+    }
+    canvas {
+      display: block;
+      margin: 10px auto;
+      border: 1px solid #eee;
+    }
+    button {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #3367d6;
+    }
+    h1 {
+      color: #4285f4;
+      text-align: center;
+    }
+    .instruction {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>图标生成器</h1>
+    
+    <div class="instruction">
+      <p>这个工具会生成Chrome扩展所需的三种尺寸的图标。点击"生成所有图标"按钮后，会自动下载PNG格式的图标文件。</p>
+      <p>将下载的图标文件放入扩展的images文件夹中，文件名必须与下载的文件名一致（icon16.png、icon48.png、icon128.png）。</p>
+    </div>
+    
+    <button onclick="generateAllIcons()" id="generate-all">生成所有图标</button>
+    
+    <div class="icons-container">
+      <div class="icon-preview">
+        <h3>16x16 图标</h3>
+        <canvas id="canvas16" width="16" height="16"></canvas>
+        <div>
+          <button onclick="downloadIcon(16)">下载 16x16</button>
+        </div>
+      </div>
+      
+      <div class="icon-preview">
+        <h3>48x48 图标</h3>
+        <canvas id="canvas48" width="48" height="48"></canvas>
+        <div>
+          <button onclick="downloadIcon(48)">下载 48x48</button>
+        </div>
+      </div>
+      
+      <div class="icon-preview">
+        <h3>128x128 图标</h3>
+        <canvas id="canvas128" width="128" height="128"></canvas>
+        <div>
+          <button onclick="downloadIcon(128)">下载 128x128</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 绘制图标
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      
+      // 背景
+      ctx.fillStyle = '#4285f4';
+      ctx.fillRect(0, 0, size, size);
+      
+      // 画板
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.fillRect(size * 0.15, size * 0.15, size * 0.7, size * 0.7);
+      
+      // 画笔
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.moveTo(size * 0.3, size * 0.3);
+      ctx.lineTo(size * 0.6, size * 0.6);
+      ctx.lineTo(size * 0.3, size * 0.6);
+      ctx.closePath();
+      ctx.fill();
+      
+      // 边框
+      ctx.strokeStyle = '#3367d6';
+      ctx.lineWidth = size * 0.05;
+      ctx.strokeRect(0, 0, size, size);
+    }
+    
+    // 下载图标
+    function downloadIcon(size) {
+      const canvas = document.getElementById(`canvas${size}`);
+      const dataURL = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = `icon${size}.png`;
+      a.click();
+    }
+    
+    // 生成所有图标
+    function generateAllIcons() {
+      downloadIcon(16);
+      downloadIcon(48);
+      downloadIcon(128);
+    }
+    
+    // 页面加载时绘制所有图标
+    window.onload = function() {
+      drawIcon(document.getElementById('canvas16'), 16);
+      drawIcon(document.getElementById('canvas48'), 48);
+      drawIcon(document.getElementById('canvas128'), 128);
+    };
+  </script>
+</body>
+</html> 
